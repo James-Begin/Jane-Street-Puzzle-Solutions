@@ -4,10 +4,12 @@ grid = [[57,33,132,268,492,732],
         [-7,2,357,452,317,395],
         [5,23,-4,592,445,620],
         [0,77,32,403,337,452]]
+#recursive method, try all possible moves 
 def solve(grid, pos, score, visited, dice):
     # base case: if the die has reached the lower-right corner, return the sum of the values in the unvisited squares
     if pos == (0, 5):
         ans = 0
+        #sum all the unvisited squares
         for (i, j) in visited:
             print(i,j)
             grid[i][j] = 0
@@ -21,20 +23,23 @@ def solve(grid, pos, score, visited, dice):
         i2, j2 = i + di, j + dj
         if not (0 <= i2 < 6 and 0 <= j2 < 6):
             continue  # square is out of bounds
-
+        #to move to the next square, its score must be divisible by the move #
         num = ((grid[i2][j2] - score) // (len(visited)+1))
         score2 = score + (num) * (len(visited)+1)
 
         print(dice)
+        #the dice can only have up to 6 distinct values
         if score2 == grid[i2][j2]:
             if (num) not in dice and len(dice) > 6:
                 continue
             else:
                 dice.add(num)
+            #add this square to visited
             visited.append((i2, j2))
             print(f"Moving from {pos} to {(i2, j2)} with score {score2}")  # print the path taken
             print(f'Visited: {visited}')
-
+            
+            #call method with new square
             result = solve(grid, (i2, j2), score2, visited, dice)
             visited.remove((i2, j2))
             if num in dice:
